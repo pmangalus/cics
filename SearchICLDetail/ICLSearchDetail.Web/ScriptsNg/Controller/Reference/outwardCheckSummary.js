@@ -172,10 +172,10 @@
                                 txtArea1.focus();
                                 a = txtArea1.document.execCommand("SaveAs", true, "excel.xls");
                             } else {
-                                var blob = new Blob([tab_text], {
+                                var blobs = new Blob([tab_text], {
                                     type: 'application/vnd.ms-excel'
                                 });
-                                var downloadUrl = URL.createObjectURL(blob);
+                                var downloadUrl = URL.createObjectURL(blobs);
                                 var a = document.createElement("a");
                                 a.href = downloadUrl;
                                 a.download = fileNameAcc;
@@ -214,7 +214,7 @@
                 });
 
             } else {
-                var that = this;
+                var thatS = this;
                 $.ajax({
                     type: 'GET',
                     //url: host + "/api/cics/getDetailsSummary/"+x.idx,
@@ -235,7 +235,7 @@
                         }
                         else {
                             // that.openDialog("No result Found. Please try again.");
-                            that.openDialog("Kindly refresh the page, possible records was already \nprocessed for the next status");
+                            thatS.openDialog("Kindly refresh the page, possible records was already \nprocessed for the next status");
                             $scope.summaryDetails = {};
                         }
 
