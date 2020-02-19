@@ -51,6 +51,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\GIT\ATM2\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.0.5.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -149,6 +153,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\api\Bypass\ByPassController.cs" />
     <Compile Include="Controllers\api\ILO\SearchEngineILOController.cs" />
     <Compile Include="Controllers\api\IWOW\SearchEngineIWOWController.cs" />
     <Compile Include="Controllers\api\Loans\LoansSummaryController.cs" />
@@ -157,6 +162,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BypassController.cs" />
     <Compile Include="Controllers\CICSHomepageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ICLSearchController.cs" />
@@ -165,11 +171,13 @@
     <Compile Include="Controllers\SSearchEngineIWOWController.cs" />
     <Compile Include="DBManager\Model\ICLModels\ICLDataModel.cs" />
     <Compile Include="DBManager\Model\ILOModel\ILOModel.cs" />
+    <Compile Include="DBManager\Model\IWOWModel\CheckImageModel.cs" />
     <Compile Include="DBManager\Model\IWOWModel\IWOWModel.cs" />
     <Compile Include="DBManager\Model\LoansModels\LoanBatchIdModel.cs" />
     <Compile Include="DBManager\Model\LoansModels\LoanDataModel.cs" />
     <Compile Include="DBManager\Model\OutwardCheckSummaryModels\OCSumDetailsModel.cs" />
     <Compile Include="DBManager\Model\OutwardCheckSummaryModels\OCSumModel.cs" />
+    <Compile Include="DBManager\Service\Bypass\BypassService.cs" />
     <Compile Include="DBManager\Service\ICLSearchService.cs" />
     <Compile Include="DBManager\Service\ILO\SearchEngineILOService.cs" />
     <Compile Include="DBManager\Service\IWOW\SearchEngineIWOWService.cs" />
@@ -292,6 +300,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="ScriptsNg\Controller\Bypass\byPassController.js" />
     <Content Include="ScriptsNg\Controller\Loans\lateCheckSummary.js" />
     <Content Include="ScriptsNg\Controller\Reference\outwardCheckSummary.js" />
     <Content Include="ScriptsNg\Controller\IWOW\searchEngineIWOW.js" />
@@ -1275,6 +1284,7 @@
     <Content Include="Views\CICSHomepage\CICSHomepage.cshtml" />
     <Content Include="Views\LLateCheckSummary\LLateCheckSummary.cshtml" />
     <Content Include="Views\SSearchEngineIWOW\SSearchEngineIWOW.cshtml" />
+    <Content Include="Views\Bypass\BypassBatchAccountKeying.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

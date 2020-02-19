@@ -7,7 +7,7 @@
     $scope.btnSearchClick = function () {
         console.log("sdfsdfsdfsfsdfsd");
         
-        if (txtMobile.value.trim() != "") {
+        if (txtMobile.value.trim() !== "") {
             var apiUrl = host + '/api/icl/searchIcl/' + txtMobile.value;
             var that = this;
             $.ajax({
@@ -16,7 +16,7 @@
                 success: function (blob) {
                     console.log("Nim in ajax erroor ", blob);
                     var jsonParse = JSON.parse(blob);
-                    if (jsonParse.length != 0) {
+                    if (jsonParse.length !== 0) {
                         $scope.display = jsonParse;
                     }
                     else {

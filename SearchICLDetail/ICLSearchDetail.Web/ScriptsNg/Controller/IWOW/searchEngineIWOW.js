@@ -2,7 +2,7 @@
 
     console.log("#1 searchEngineIWOW controller JS");
     var host = 'http://localhost:53325';
-    //var host = 'http://10.200.1.39:9865';
+    //var host = 'http://10.200.1.39:9866';
 
     //var radioSearchUserID = document.getElementById('radios-0');
     //var radioSearchCheckNo = document.getElementById('radios-1');
@@ -15,6 +15,9 @@
     $scope.radioDisabled1 = true;
     $scope.radioDisabled3 = true;
     $scope.isChecked = true;
+
+
+    var iclFileNames = [];
     document.getElementById("modal-date-exact").disabled = true;
     $('#loading').hide();
     const timeField = document.getElementById('input-time');
@@ -34,6 +37,9 @@
 
     const dateFieldOut2 = document.getElementById('input-dateOutwardR2');
     console.log("dateFieldOut:" + dateFieldOut.checkValidity());
+
+
+    const dateOutwardR4 = document.getElementById('input-dateOutwardR4');
 
     const batchIDOut = document.getElementById('txtBatchIDOutwardR2');
     console.log("batchIDOut:" + batchIDOut.checkValidity());
@@ -78,6 +84,12 @@
             document.getElementById('radioSearchBatchOutward').checked = false;
             $scope.isRequired = true;
             $scope.isRequired2 = false;
+
+            document.getElementById('txtICLFnameOutwardR3').value = "";
+            document.getElementById('radioSearchIclFileNameOutward').checked = false;
+            $scope.itemListIclFileNameX = [];
+            iclFileNames = [];
+            dateOutwardR4.disabled = true;
         }
         for (i = 0; i < tablinks2.length; i++) {
             tablinks2[i].style.backgroundColor = "";
@@ -139,13 +151,12 @@
 
                         that.openDialog("Please enter a valid time (HH:MM PM/AM).");
 
-                    }
-                    else {
+                    } else {
                         $('#loading').show();
                         $.ajax({
 
                             type: 'GET',
-                           url: host + "/api/searchEngine/searchIWOW/userID/" + param,
+                            url: host + "/api/searchEngine/searchIWOW/userID/" + param,
                             success: function (blob) {
                                 $('#loading').hide();
                                 var jsonParse = JSON.parse(blob);
@@ -174,24 +185,17 @@
                         });
 
                     }
-                }
-                else {
+                } else {
                     that.openDialog("Special Characters in User ID Field is not Allowed! ");
                 }
 
-            }
-            else if (!txtUserId.checkValidity()) {
+            } else if (!txtUserId.checkValidity()) {
                 that.openDialog("Please enter a User ID.");
-            }
-            else if (!dateField.checkValidity()) {
+            } else if (!dateField.checkValidity()) {
                 that.openDialog("Please enter a valid date (mm/dd/yyyy).");
-            }
-            else if (!radioSearchCheckNo.checked && radioSearchUserID.checked) {
+            } else if (!radioSearchCheckNo.checked && radioSearchUserID.checked) {
                 that.openDialog("Please enter User ID/ Verification Date.");
-            }
-
-
-            else if (radioSearchCheckNo.checked && document.getElementById('txtCheckNumber').value !== "") {
+            } else if (radioSearchCheckNo.checked && document.getElementById('txtCheckNumber').value !== "") {
 
                 var chkNumber = document.getElementById('txtCheckNumber').value;
                 var checkDateRange = document.getElementById('input-date1');
@@ -225,8 +229,7 @@
                     if (userId !== "" && !(userId.match(letterNumber))) {
 
                         that.openDialog("Special Characters in User ID Field is not Allowed!");
-                    }
-                    else {
+                    } else {
                         $('#loading').show();
                         console.log("pasok" + chkNumber);
                         $.ajax({
@@ -254,8 +257,7 @@
                                     }
                                     $scope.$apply();
 
-                                }
-                                else {
+                                } else {
                                     $scope.isVisible = false;
                                     that.openDialog("No records found! Kindly check the Check Number entered.");
                                 }
@@ -271,12 +273,9 @@
 
 
                 //$scope.isVisible = true;
-            }
-
-            else if (radioSearchCheckNo.checked && !radioSearchUserID.checked) {
+            } else if (radioSearchCheckNo.checked && !radioSearchUserID.checked) {
                 that.openDialog("Please enter the check number.");
-            }
-            else if (radioSearchScanAccountNo.checked && document.getElementById('txtScanAcctNumber').value !== "" && document.getElementById('input-date2').value !== "") {
+            } else if (radioSearchScanAccountNo.checked && document.getElementById('txtScanAcctNumber').value !== "" && document.getElementById('input-date2').value !== "") {
 
                 var scanNumber;
                 var chkNumber;
@@ -293,11 +292,9 @@
 
                 if (!scanNumber.match(NumberS)) {
                     that.openDialog("Please enter a valid Scan Account Number");
-                }
-                else if (!scanDate.checkValidity()) {
+                } else if (!scanDate.checkValidity()) {
                     that.openDialog("Please enter a valid Transaction Date");
-                }
-                else if (chkNumber !== "" && !(chkNumber.match(NumberS))) {
+                } else if (chkNumber !== "" && !(chkNumber.match(NumberS))) {
                     that.openDialog("Please enter a valid Check Number");
                 } else {
 
@@ -326,8 +323,7 @@
                                     $scope.IWOWDetails = jsonParseC;
                                 }
                                 $scope.$apply();
-                            }
-                            else {
+                            } else {
                                 $scope.isVisible = false;
                                 that.openDialog("No records found! Kindly check the details entered.");
                             }
@@ -337,11 +333,9 @@
                         }
                     });
                 }
-            }
-            else if (radioSearchScanAccountNo.checked && document.getElementById('txtScanAcctNumber').value == "") {
+            } else if (radioSearchScanAccountNo.checked && document.getElementById('txtScanAcctNumber').value == "") {
                 that.openDialog("Please enter Scan Account Number");
-            }
-            else if (radioSearchScanAccountNo.checked && document.getElementById('input-date2').value == "") {
+            } else if (radioSearchScanAccountNo.checked && document.getElementById('input-date2').value == "") {
                 that.openDialog("Please enter Transaction Date");
             }
         },
@@ -352,6 +346,7 @@
             $scope.tblIWOWDetailsOuward = [];
             var radioSearchBRSTNOutward = document.getElementById('radioSearchBRSTNOutward');
             var radioSearchBatchOutward = document.getElementById('radioSearchBatchOutward');
+            var radioSearchIclFileNameOutward = document.getElementById('radioSearchIclFileNameOutward');
 
             if (radioSearchBRSTNOutward.checked) {
 
@@ -388,7 +383,7 @@
                     }
 
                     param += "|" + checkNumber;
-                    //param = "F_20191223_014_0000007041!!!ICL,F_20191213_014_0000007040!!!ICL|2020-02-02";
+
                     console.log(param);
 
                     if (isCheckNumber) {
@@ -396,7 +391,6 @@
                         $.ajax({
                             type: 'GET',
                             url: host + "/api/searchEngine/searchILO/brstn/" + param,
-                            //url: host + "/api/searchEngine/searchILO/iclFile/" + param,
                             success: function (blob) {
 
                                 var jsonParseOut = JSON.parse(blob);
@@ -411,8 +405,7 @@
                                     var fDate = dateFieldOut.value.replace(/-/gi, "");
                                     that.extractExcel("tblIWOWDetailsOuward", "Outward Details Report_ByBRSTN (" + brstnOut.value + "_" + fDate + ").xls");
                                     $('#loading').hide();
-                                }
-                                else {
+                                } else {
                                     $scope.isVisible = false;
                                     $('#loading').hide();
                                     that.openDialog("No records found!");
@@ -429,8 +422,7 @@
 
 
                 }
-            }
-            else if (radioSearchBatchOutward.checked) {
+            } else if (radioSearchBatchOutward.checked) {
                 if (!batchIDOut.checkValidity()) {
 
                     that.openDialog("Please enter a valid Batch ID.");
@@ -477,8 +469,7 @@
                                     var fDate = dateFieldOut2.value.replace(/-/gi, "");
                                     that.extractExcel("tblIWOWDetailsOuward", "Outward Details Report_ByBatchID (" + batchIDOut.value + "_" + fDate + ").xls");
                                     $('#loading').hide();
-                                }
-                                else {
+                                } else {
                                     $scope.isVisible = false;
                                     $('#loading').hide();
                                     that.openDialog("No records found!");
@@ -494,6 +485,71 @@
 
 
 
+                }
+            } else if (radioSearchIclFileNameOutward.checked) {
+
+                var specialCharsFileRegex = /^[A-Z0-9,_.]+$/i;
+                var txtICLFnameOutwardR3 = document.getElementById('txtICLFnameOutwardR3').value;
+                var dateOutwardR4 = document.getElementById('input-dateOutwardR4').value;
+                var isAllChars = false;
+                var isCorrectSpecial = false;
+                var that = this;
+                var param = "";
+                var icls = "";
+
+                for (var i = 0; i < iclFileNames.length; i++) {
+                    if (i == iclFileNames.length - 1) {
+                        icls += iclFileNames[i].iclFilename;
+                    } else {
+                        icls += iclFileNames[i].iclFilename + ",";
+                    }
+                }
+
+                icls = icls.toUpperCase().replace(/\n|\r| /g, "");
+
+                isCorrectSpecial = specialCharsFileRegex.test(icls) ? true : false;
+
+                if (isCorrectSpecial && dateOutwardR4.trim() !== "") {
+                    if (itemListIclFileName.length > 0 && (dateOutwardR4 !== "" || dateOutwardR4 !== null)) {
+                        //that.openDialog("will proceed to search here.. under construction...");
+                        icls = encodeURIComponent(icls.replace(/\./g, '!!!'));
+                        console.log("icls: " + icls);
+                        param = icls + "|" + dateOutwardR4;
+
+                        $('#loading').show();
+                        $.ajax({
+                            type: 'GET',
+                            url: host + "/api/searchEngine/searchILO/iclFile/" + param,
+                            success: function (blob) {
+
+                                var jsonParseOut = JSON.parse(blob);
+                                //console.log("jsonParse", jsonParse);
+                                if (jsonParseOut.length !== 0) {
+                                    $scope.isVisible = true;
+                                    $scope.IWOWDetailsOutward = jsonParseOut;
+                                    $scope.$apply();
+                                    var fDate = dateOutwardR4.replace(/-/g, "");
+                                    that.extractExcel("tblIWOWDetailsOuward", "Outward Details Report_ICLFileName (" + fDate + ").xls");
+                                    $('#loading').hide();
+                                } else {
+                                    $scope.isVisible = false;
+                                    $('#loading').hide();
+                                    that.openDialog("No records found!");
+                                }
+                            },
+                            error: function (a, b, c) {
+                                //$('#loading').hide();
+                                $('#loading').hide();
+                                //console.log("Nim in ajax erroor ", a);
+                            }
+                        });
+                    }
+                } else if (isCorrectSpecial == false) {
+                    that.openDialog("Please enter a valid ICL filename (X_XXXXXXXX_XXX_XXXXXXXXXX.ICL) \n and separate multiple filenames using 'comma ( , )'");
+                } else if (dateOutwardR4.trim() == "") {
+                    that.openDialog("Date is required.");
+                } else {
+                    that.openDialog("Input invalid! Please try again.");
                 }
             }
 
@@ -633,23 +689,55 @@
             //console.logs("batchClick1");
             $scope.radioDisabled1 = true;
             $scope.radioDisabled2 = false;
+            $scope.radioDisabled3 = true;
             $scope.isVisible = false;
             $scope.IWOWDetailsOutward = [];
+            dateOutwardR4.disabled = true;
+            $scope.itemListIclFileNameX = [];
+            iclFileNames = [];
             document.getElementById('radioSearchBatchOutward').checked = false;
+            document.getElementById('radioSearchIclFileNameOutward').checked = false;
             document.getElementById('txtBatchIDOutwardR2').value = "";
             document.getElementById('txtCheckNoOutwardR2').value = "";
             document.getElementById('input-dateOutwardR2').value = "";
+            document.getElementById('input-dateOutwardR4').value = "";
+
+
+            document.getElementById('radioSearchIclFileNameOutward').value = "";
         },
         $scope.radioSearchBatchOutwardClick = function () {
             //console.logs("batchClick1");
             $scope.radioDisabled1 = false;
+            $scope.radioDisabled3 = true;
             $scope.radioDisabled2 = true;
             $scope.isVisible = false;
             $scope.IWOWDetailsOutward = [];
+            $scope.itemListIclFileNameX = [];
+            dateOutwardR4.disabled = true;
+            iclFileNames = [];
             document.getElementById('radioSearchBRSTNOutward').checked = false;
+            document.getElementById('radioSearchIclFileNameOutward').checked = false;
             document.getElementById('txtBRSTNOutwardR1').value = "";
             document.getElementById('txtCheckNoOutwardR1').value = "";
             document.getElementById('input-dateOutwardR1').value = "";
+            document.getElementById('input-dateOutwardR4').value = "";
+            document.getElementById('radioSearchIclFileNameOutward').value = "";
+        },
+        $scope.radioSearchIclFileNameOutwardClick = function () {
+            $scope.radioDisabled1 = true;
+            $scope.radioDisabled2 = true;
+            $scope.radioDisabled3 = false;
+            $scope.isVisible = false;
+            $scope.IWOWDetailsOutward = [];
+            $scope.itemListIclFileNameX = [];
+            iclFileNames = [];
+            dateOutwardR4.disabled = false;
+            document.getElementById('radioSearchBRSTNOutward').checked = false;
+            document.getElementById('radioSearchBatchOutward').checked = false;
+            document.getElementById('txtBRSTNOutwardR1').value = "";
+            document.getElementById('txtCheckNoOutwardR1').value = "";
+            document.getElementById('input-dateOutwardR1').value = "";
+            document.getElementById('input-dateOutwardR4').value = "";
         },
 
         $scope.btnResetClick = function () {
@@ -672,6 +760,8 @@
 
             document.getElementById('radioSearchBRSTNOutward').checked = true;
             document.getElementById('radioSearchBatchOutward').checked = false;
+
+
             document.getElementById('txtBRSTNOutwardR1').value = "";
             document.getElementById('input-dateOutwardR1').value = "";
             document.getElementById('txtCheckNoOutwardR1').value = "";
@@ -686,6 +776,10 @@
             document.getElementById('modal-date-exact').value = "";
             document.getElementById('modal-date-from').value = "";
             document.getElementById('modal-date-to').value = "";
+
+
+
+
             //$scope.isChecked = true;
             //document.getElementById("btnSearch").disabled = true;
         },
@@ -703,9 +797,19 @@
 
             $scope.radioDisabled2 = false;
             $scope.radioDisabled1 = true;
+            $scope.radioDisabled4 = true;
+            $scope.radioDisabled3 = true;
             document.getElementById('modal-date-exact').value = "";
             document.getElementById('modal-date-from').value = "";
             document.getElementById('modal-date-to').value = "";
+
+
+
+            document.getElementById('txtICLFnameOutwardR3').value = "";
+            document.getElementById('radioSearchIclFileNameOutward').checked = false;
+            $scope.itemListIclFileNameX = [];
+            iclFileNames = [];
+            document.getElementById('input-dateOutwardR4').value = "";
 
             //$scope.isChecked = true;
             //document.getElementById("btnSearch").disabled = true;
@@ -752,16 +856,26 @@
         if (isBy == "1") {
             document.getElementById('radioSearchBRSTNOutward').checked = true;
             document.getElementById('radioSearchBatchOutward').checked = false;
+            document.getElementById('radioSearchIclFileNameOutward').checked = false;
             $scope.radioDisabled1 = true;
+            $scope.radioDisabled3 = true;
             $scope.radioDisabled2 = false;
 
 
+        } else if (isBy == "3") {
+            document.getElementById('radioSearchIclFileNameOutward').checked = true;
+            document.getElementById('radioSearchBRSTNOutward').checked = false;
+            document.getElementById('radioSearchBatchOutward').checked = false;
+            $scope.radioDisabled1 = true;
+            $scope.radioDisabled2 = true;
+            $scope.radioDisabled3 = false;
         } else {
             document.getElementById('radioSearchBRSTNOutward').checked = false;
             document.getElementById('radioSearchBatchOutward').checked = true;
-
-            $scope.radioDisabled1 = false;
+            document.getElementById('radioSearchIclFileNameOutward').checked = false;
+            $scope.radioDisabled3 = true;
             $scope.radioDisabled2 = true;
+            $scope.radioDisabled1 = false;
         }
 
         document.getElementById("btnSearch").disabled = false;
@@ -859,5 +973,110 @@
             $('#myModal').modal('show');
             $scope.txtDateRange = id;
 
-        }
+        },
+        $scope.itemListIclFileNameXDblClick = function (x) {
+            console.log("xxx", x);
+            iclFileNames.splice(document.getElementById("itemListIclFileName").selectedIndex, 1);
+        },
+        $scope.rowSummaryClickInwardScanAccountNumber = function (x) {
+            var scanNumberCh = document.getElementById('txtScanAcctNumber').value.trim();
+            var scanDateCh = document.getElementById('input-date2').value.trim();
+
+            if (document.getElementById("radioSearchScanAccountNo").checked == true) { // will only download if scan account number and exact date is user's input
+                console.log(x);
+                var param = scanNumberCh + "|" + scanDateCh + "|" + x.INSTRUMENT_NUMBER + "|" + x.ZP_AMOUNT.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + "|" + x.CHECK_BRSTN;
+                BootstrapDialog.show({
+                    message: "Download Check Image Details?",
+                    buttons: [{
+                        label: 'Yes',
+                        action: function (dialogItself) {
+                            $('#loading').show();
+                            dialogItself.close();
+                            $.ajax({
+
+                                type: 'GET',
+                                url: host + "/api/searchEngine/searchIWOW/getImageCheck/" + param,
+                                success: function (blob) {
+                                    $('#loading').hide();
+
+                                    var byte64 = blob.split("FILENAME:")[0];
+                                    var fileName = blob.split("FILENAME:")[1];
+
+                                    var byteCharacters = atob(byte64);
+                                    var byteNumbers = new Array(byteCharacters.length);
+                                    for (var i = 0; i < byteCharacters.length; i++) {
+                                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                    }
+                                    var byteArray = new Uint8Array(byteNumbers);
+
+                                    var file = new Blob([byteArray], { type: 'application/pdf' });
+                                    //trick to download store a file having its URL
+                                    var fileURL = URL.createObjectURL(file);
+                                    var a = document.createElement('a');
+                                    a.href = fileURL;
+                                    a.target = '_blank';
+                                    a.download = fileName;
+                                    document.body.appendChild(a);
+                                    a.click();
+
+                                },
+                                error: function (a, b, c) {
+                                    console.log("Nim in ajax erroor ", a);
+                                    $('#loading').hide();
+                                }
+
+                            });
+                        }
+                    },
+                    {
+                        label: 'No',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                        }
+                    }
+                    ]
+                });
+            }
+        },
+        $("#txtICLFnameOutwardR3").keyup(function (event) {
+            var txtAreaFileNameVal = document.getElementById("txtICLFnameOutwardR3");
+
+            if (event.keyCode === 13 && txtAreaFileNameVal.value.trim() !== "") {
+
+                var txtFileNamesArr = txtAreaFileNameVal.value.split(",");
+                var allClearFileNames = true;
+                for (var i = 0; i < txtFileNamesArr.length; i++) {
+                    if (txtFileNamesArr[i].trim() != "") {
+                        if (txtFileNamesArr[i].toUpperCase().indexOf(".ICL") == -1) {
+                            BootstrapDialog.show({
+                                message: "Please enter a valid ICL filename (X_XXXXXXXX_XXX_XXXXXXXXXX.ICL) \n and separate multiple filenames using 'comma ( , )' ",
+                                buttons: [{
+                                    label: 'Close',
+                                    action: function (dialogItself) {
+                                        dialogItself.close();
+                                    }
+                                }]
+                            });
+                            allClearFileNames = false;
+                            break;
+                        }
+
+                    }
+                }
+                if (allClearFileNames) {
+                    for (var i = 0; i < txtFileNamesArr.length; i++) {
+                        iclFileNames.push({ iclFilename: txtFileNamesArr[i] });
+                    }
+                    txtAreaFileNameVal.value = "";
+                }
+
+                $scope.itemListIclFileNameX = iclFileNames;
+                $scope.itemListIclFileNameSize = iclFileNames.length + 1; //to remove initial dropdown arrow when adding only one icl filename
+
+                console.log("iclFileNames");
+                console.log(iclFileNames);
+                $scope.$apply();
+
+            }
+        });
 }]);
